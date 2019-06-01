@@ -1,0 +1,260 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * Write your model definitions here
+ */
+
+namespace io.dev.foodchain
+
+abstract participant Entity identified by id {
+  o String id
+  o String createdBy
+  o String createdAt
+  o String changedBy
+  o String changedAt
+}
+
+/**
+ * A Sample participant
+ */
+abstract participant Person extends Entity {
+  o String title
+  o String firstName
+  o String lastName
+  o ContactDetails contactDetails
+}
+
+/**
+ * A Sample participant
+ */
+abstract participant Business extends Entity {
+  o String name
+  o ContactDetails headquarters
+  o BusinessPartner[] representatives
+  o Manager[] managers
+}
+
+/**
+ * A Sample participant
+ */
+participant Employee extends Person {
+  o Business employer
+  o Manager manager
+  o DateTime startDate
+  o String employmentStatus
+  o String department
+  o String jobRole
+}
+
+/**
+ * A Sample participant
+ */
+participant Manager extends Employee {
+  o Employee[] directReports
+}
+
+/**
+ * A Sample participant
+ */
+participant BusinessPartner extends Person {
+  o BusinessPartnerType type
+  o String companyId
+}
+
+/**
+ * A Sample participant
+ */
+participant Company extends Business {
+  o CompanyCategory category
+}
+
+asset Material identified by materialId {
+  o String materialId
+  o String number
+  o String description optional
+  o Product[] products optional
+  o String batchInformation optional
+}
+
+asset Product identified by productId {
+  o String productId
+  o String name
+  o String description optional
+  o Entity owner optional
+  o String batchNumber optional
+  o Material[] parts optional
+  o ProductDetail[] productDetails optional
+}
+
+asset ProductDetail identified by productDetailId {
+  o String productDetailId
+  o String productId
+  o String value1 optional
+  o String value2 optional
+  o String value3 optional
+}
+
+asset Batch identified by batchId {
+  o String batchId
+  o String number
+  o String productId
+}
+
+asset Order identified by orderId {
+  o String orderId
+  o OrderStatus status
+  o Company manufacturer optional
+  o Entity orderer optional
+  o OrderDetail[] orderDetails optional
+  o OrderType type optional
+}
+
+enum OrderStatus {
+  o PLACED
+  o SCHEDULED_FOR_MANUFACTURER
+  o ID_ASSIGNED
+  o ORDERER_ASSIGNED
+  o DELIVERED
+}
+
+enum OrderType {
+  o SALES
+  o PURCHASE
+}
+
+asset OrderDetail identified by orderDetailId {
+  o String orderDetailId
+  o String orderId
+  o String productId
+  o Double quantity
+  o UnitOfMeasurement unit
+}
+
+enum UnitOfMeasurement {
+  o PIECE
+  o PALLET
+  o BOX
+}
+
+/**
+ * A Sample participant
+ */
+concept ContactDetails {
+  o String email
+  o String mobilePhone
+  o String homePhone
+  o Address address
+}
+
+/**
+ * A Sample participant
+ */
+concept Address {
+  o String Description
+  o AddressType type
+  o String country
+  o String locality
+  o String region
+  o String street
+  o String street2
+  o String street3
+  o String postalCode
+  o String postOfficeBoxNumber
+}
+
+/**
+ * A Sample participant
+ */
+enum AddressType {
+  o PRIVATE
+  o CONTACT
+  o BUSINESS
+  o TRANSPORT
+  o PUBLIC
+}
+
+/**
+ * A Sample participant
+ */
+enum CompanyCategory {
+  o MANUFACTURER
+  o EXCHANGE
+  o TRANSPORT
+}
+
+/**
+ * A Sample participant
+ */
+enum BusinessPartnerType {
+  o CUSTOMER
+  o SUPPLIER
+}
+
+transaction CreateOrder {
+  o Order newOrder
+  o OrderDetail[] orderDetails
+  --> Company manufacturer
+  --> Entity orderer
+}
+
+transaction UpdateOrder {
+  o Order order
+  o OrderStatus newStatus
+}
+
+transaction AddOrderDetail {
+  o Order order
+  o OrderDetail orderDetail
+}
+
+transaction RemoveOrderDetail {
+  o Order order
+  o OrderDetail orderDetail
+}
+
+transaction CreateProduct {
+  o Product newProduct
+  o ProductDetail[] productDetails
+}
+
+transaction UpdateProduct {
+  o Product updatedProduct
+}
+
+transaction TransferProductOwnership {
+  o Product transferableProduct
+  --> Entity newOwner
+}
+
+transaction CreateProductDetail {
+  o ProductDetail newProductDetail
+}
+
+transaction UpdateProductDetail {
+  o ProductDetail updatedProductDetail
+}
+
+transaction CreateBatch {
+  o Batch newBatch
+}
+
+transaction UpdateBatch {
+  o Batch updatedBatch
+}
+
+transaction AssignBatch {
+  --> Product product
+  o Batch batch
+}
