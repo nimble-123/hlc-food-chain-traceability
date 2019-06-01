@@ -18,243 +18,170 @@
 
 namespace io.dev.foodchain
 
-abstract participant Entity identified by id {
-  o String id
-  o String createdBy
-  o String createdAt
-  o String changedBy
-  o String changedAt
-}
-
-/**
- * A Sample participant
- */
-abstract participant Person extends Entity {
-  o String title
-  o String firstName
-  o String lastName
-  o ContactDetails contactDetails
-}
-
-/**
- * A Sample participant
- */
-abstract participant Business extends Entity {
+abstract participant Company identified by gln {
+  o String gln
   o String name
-  o ContactDetails headquarters
-  o BusinessPartner[] representatives
-  o Manager[] managers
+  o Address address
+  o CompanyType type
 }
 
-/**
- * A Sample participant
- */
-participant Employee extends Person {
-  o Business employer
-  o Manager manager
-  o DateTime startDate
-  o String employmentStatus
-  o String department
-  o String jobRole
+participant Farmer extends Company {
+
 }
 
-/**
- * A Sample participant
- */
-participant Manager extends Employee {
-  o Employee[] directReports
+participant Slaughterhouse extends Company {
+
 }
 
-/**
- * A Sample participant
- */
-participant BusinessPartner extends Person {
-  o BusinessPartnerType type
-  o String companyId
+participant CuttingPlant extends Company {
+
 }
 
-/**
- * A Sample participant
- */
-participant Company extends Business {
-  o CompanyCategory category
+participant Manufacturer extends Company {
+
+}
+
+participant Wholesale extends Company {
+
+}
+
+participant Retailer extends Company {
+
+}
+
+concept Address {
+  o String street
+  o String number
+  o String postCode
+  o String country
+}
+
+enum CompanyType {
+  o LANDWIRT
+  o SCHLACHTHOF
+  o ZERLEGUNG
+  o PRODUKTION
+  o GROSSHANDEL
+  o EINZELHANDEL
+  o TRANSPORT
+}
+
+participant Consumer identified by consumerId {
+  o String consumerId
+  o String name optional
 }
 
 asset Material identified by materialId {
   o String materialId
-  o String number
-  o String description optional
-  o Product[] products optional
-  o String batchInformation optional
+  o MaterialType type
+  o MaterialQuality quality
+  o Boolean bonus optional
+  o MaterialStatus status default = 'REGISTRIERT'
+  --> Company owner optional
+  --> Company[] ownerHistory optional
+  o TransportLog[] transportLog optional
+  o SensorData[] sensorData optional
 }
 
-asset Product identified by productId {
-  o String productId
-  o String name
-  o String description optional
-  o Entity owner optional
-  o String batchNumber optional
-  o Material[] parts optional
-  o ProductDetail[] productDetails optional
+enum MaterialType {
+  o SCHWEIN
+  o SCHWEINEHAELFTE
+  o KOPF
+  o RUECKEN
+  o VORDERKEULE
+  o RUMPF
+  o HINTERKEULE
+  o SALAMI
+  o BRATWURST
 }
 
-asset ProductDetail identified by productDetailId {
-  o String productDetailId
-  o String productId
-  o String value1 optional
-  o String value2 optional
-  o String value3 optional
+enum MaterialQuality {
+  o LOW
+  o MID
+  o HIGH
+}
+
+enum MaterialStatus {
+  o REGISTRIERT
+  o IN_TRANSIT
+  o VERARBEITET
+}
+
+concept TransportLog {
+  o DateTime timestamp
+  o Location location
+}
+
+concept Location {
+  o String latitude
+  o String longitude
+  o String altitude
+  o String description optional
+}
+
+concept SensorData {
+  o DateTime timestamp
+  o String key
+  o String value
 }
 
 asset Batch identified by batchId {
   o String batchId
-  o String number
-  o String productId
+  o DateTime timestamp
+  o String description optional
+  --> Material[] materials
 }
 
-asset Order identified by orderId {
-  o String orderId
-  o OrderStatus status
-  o Company manufacturer optional
-  o Entity orderer optional
-  o OrderDetail[] orderDetails optional
-  o OrderType type optional
+asset BatchNetwork identified by batchNetworkId {
+  o String batchNetworkId
+  o String description
+  --> Batch[] nodes optional
+  o Edge[] edges optional
 }
 
-enum OrderStatus {
-  o PLACED
-  o SCHEDULED_FOR_MANUFACTURER
-  o ID_ASSIGNED
-  o ORDERER_ASSIGNED
-  o DELIVERED
+concept Edge {
+  o String edgeId
+  --> Batch source
+  --> Batch target
+  o String weight optional
 }
 
-enum OrderType {
-  o SALES
-  o PURCHASE
+transaction verarbeiteSchwein {
+  --> Material material
 }
 
-asset OrderDetail identified by orderDetailId {
-  o String orderDetailId
-  o String orderId
-  o String productId
-  o Double quantity
-  o UnitOfMeasurement unit
+transaction produceMaterial {
+  o Material newMaterial // new material object
+  --> Material[] inputMaterial optional // minted material (set status to 'burned')
 }
 
-enum UnitOfMeasurement {
-  o PIECE
-  o PALLET
-  o BOX
+transaction setMaterialStatus {
+  --> Material material // material to be modified
+  o MaterialStatus newStatus
 }
 
-/**
- * A Sample participant
- */
-concept ContactDetails {
-  o String email
-  o String mobilePhone
-  o String homePhone
-  o Address address
+transaction addBatchNetworkNode {
+  --> BatchNetwork network // batch network to be modified
+  --> Batch node
+  o Edge edge optional
 }
 
-/**
- * A Sample participant
- */
-concept Address {
-  o String Description
-  o AddressType type
-  o String country
-  o String locality
-  o String region
-  o String street
-  o String street2
-  o String street3
-  o String postalCode
-  o String postOfficeBoxNumber
+transaction addBatchNetworkEdge {
+  --> BatchNetwork network // batch network to be modified
+  o Edge edge
 }
 
-/**
- * A Sample participant
- */
-enum AddressType {
-  o PRIVATE
-  o CONTACT
-  o BUSINESS
-  o TRANSPORT
-  o PUBLIC
+transaction addSensorData {
+  --> Material material // material to be modified
+  o SensorData data
 }
 
-/**
- * A Sample participant
- */
-enum CompanyCategory {
-  o MANUFACTURER
-  o EXCHANGE
-  o TRANSPORT
+transaction addTransportLog {
+  --> Material material // material to be modified
+  o TransportLog logEntry
 }
 
-/**
- * A Sample participant
- */
-enum BusinessPartnerType {
-  o CUSTOMER
-  o SUPPLIER
-}
-
-transaction CreateOrder {
-  o Order newOrder
-  o OrderDetail[] orderDetails
-  --> Company manufacturer
-  --> Entity orderer
-}
-
-transaction UpdateOrder {
-  o Order order
-  o OrderStatus newStatus
-}
-
-transaction AddOrderDetail {
-  o Order order
-  o OrderDetail orderDetail
-}
-
-transaction RemoveOrderDetail {
-  o Order order
-  o OrderDetail orderDetail
-}
-
-transaction CreateProduct {
-  o Product newProduct
-  o ProductDetail[] productDetails
-}
-
-transaction UpdateProduct {
-  o Product updatedProduct
-}
-
-transaction TransferProductOwnership {
-  o Product transferableProduct
-  --> Entity newOwner
-}
-
-transaction CreateProductDetail {
-  o ProductDetail newProductDetail
-}
-
-transaction UpdateProductDetail {
-  o ProductDetail updatedProductDetail
-}
-
-transaction CreateBatch {
-  o Batch newBatch
-}
-
-transaction UpdateBatch {
-  o Batch updatedBatch
-}
-
-transaction AssignBatch {
-  --> Product product
-  o Batch batch
-}
+transaction generateMockMasterData {}
+transaction generateMockTransactionData {}
+transaction removeMockMasterData {}
+transaction removeMockTransactionData {}
