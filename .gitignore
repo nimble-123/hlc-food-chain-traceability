@@ -156,3 +156,4 @@ $RECYCLE.BIN/
 # Project files
 .vscode
 dist
+composer-logs
