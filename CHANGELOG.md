@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.3.0](https://github.com/nimble-123/hlc-food-chain-traceability/compare/v0.2.1...v0.3.0) (2019-06-01)
+
+
+### Features
+
+* **Queries:** Add first simple network queries ([936fdae](https://github.com/nimble-123/hlc-food-chain-traceability/commit/936fdae))
+
+
+
 ### [0.2.1](https://github.com/nimble-123/hlc-food-chain-traceability/compare/v0.2.0...v0.2.1) (2019-06-01)
 
 
