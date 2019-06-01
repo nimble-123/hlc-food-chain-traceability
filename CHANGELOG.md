@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.0](https://github.com/nimble-123/hlc-food-chain-traceability/compare/v0.1.0...v0.2.0) (2019-06-01)
+
+
+### Bug Fixes
+
+* **model:** Fix folder name ([0ae44d6](https://github.com/nimble-123/hlc-food-chain-traceability/commit/0ae44d6))
+
+
+### Features
+
+* Update of business network model and logic ([105b6e2](https://github.com/nimble-123/hlc-food-chain-traceability/commit/105b6e2))
+
+
+
 ## 0.1.0 (2019-06-01)
 
 
