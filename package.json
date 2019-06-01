@@ -1,0 +1,49 @@
+{
+  "name": "food-chain-traceability",
+  "version": "0.0.1",
+  "description": "A Business Network to support the food traceability.",
+  "keywords": [
+    "composer",
+    "composer-network"
+  ],
+  "author": "Nils Lutz",
+  "email": "info@nilslutz.de",
+  "license": "Apache-2.0",
+  "engines": {
+    "composer": "^0.20.8"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nimble-123/hlc-food-chain-traceability.git"
+  },
+  "scripts": {
+    "prepublish": "mkdirp ./dist && composer archive create --sourceType dir --sourceName . -a ./dist/food-chain-traceability.bna",
+    "pretest": "npm run lint",
+    "lint": "eslint .",
+    "test": "nyc mocha -t 0 test/*.js && cucumber-js",
+    "release": "standard-version -s"
+  },
+  "devDependencies": {
+    "chai": "latest",
+    "chai-as-promised": "latest",
+    "commitizen": "^3",
+    "composer-admin": "^0.20.8",
+    "composer-cli": "^0.20.8",
+    "composer-client": "^0.20.8",
+    "composer-common": "^0.20.8",
+    "composer-connector-embedded": "^0.20.8",
+    "composer-cucumber-steps": "^0.20.8",
+    "cucumber": "^2.2.0",
+    "cz-conventional-changelog": "^2.1.0",
+    "eslint": "latest",
+    "nyc": "latest",
+    "mkdirp": "latest",
+    "mocha": "latest",
+    "standard-version": "^6.0.1"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
+}
