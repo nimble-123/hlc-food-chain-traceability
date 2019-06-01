@@ -152,7 +152,7 @@ transaction verarbeiteSchwein {
 
 transaction produceMaterial {
   o Material newMaterial // new material object
-  --> Material[] inputMaterial optional // minted material (set status to 'burned')
+  --> Material[] inputMaterial optional // processed material (set status to 'burned')
 }
 
 transaction setMaterialStatus {
