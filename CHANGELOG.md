@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.1](https://github.com/nimble-123/hlc-food-chain-traceability/compare/v0.3.0...v0.3.1) (2019-06-03)
+
+
+### Build System
+
+* **npm:** Update dev dependencies ([74f1d11](https://github.com/nimble-123/hlc-food-chain-traceability/commit/74f1d11))
+
+
+### Features
+
+* Add transaction definition ([6de8b3a](https://github.com/nimble-123/hlc-food-chain-traceability/commit/6de8b3a))
+* **Produce material:** WIP: Add transaction logic for material production ([8d8f175](https://github.com/nimble-123/hlc-food-chain-traceability/commit/8d8f175))
+
+
+
 ## [0.3.0](https://github.com/nimble-123/hlc-food-chain-traceability/compare/v0.2.1...v0.3.0) (2019-06-01)
 
 
