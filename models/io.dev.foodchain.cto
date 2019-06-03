@@ -130,6 +130,13 @@ asset Batch identified by batchId {
   o DateTime timestamp
   o String description optional
   --> Material[] materials
+  o BatchStatus status
+}
+
+enum BatchStatus {
+  o CREATED
+  o REGISTERED
+  o PROCESSED
 }
 
 asset BatchNetwork identified by batchNetworkId {
@@ -152,7 +159,22 @@ transaction verarbeiteSchwein {
 
 transaction produceMaterial {
   o Material newMaterial // new material object
-  --> Material[] inputMaterial optional // processed material (set status to 'burned')
+  --> Material[] inputMaterial optional // processed material (set status to 'processed')
+  --> Batch[] inputBatch optional // processed batch (set status to 'processed')
+}
+
+transaction transportMaterial {
+  --> Material material
+  --> Company destination
+}
+
+transaction changeMaterialOwnership {
+  --> Material material
+  --> Company newOwner
+}
+
+transaction sellMaterial {
+  --> Material material
 }
 
 transaction setMaterialStatus {
