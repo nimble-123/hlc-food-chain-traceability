@@ -18,6 +18,11 @@
 
 namespace io.dev.foodchain
 
+
+/*****************************************************************************/
+/* Participant definitions                                                   */
+/*****************************************************************************/
+
 abstract participant Company identified by gln {
   o String gln
   o String name
@@ -25,35 +30,90 @@ abstract participant Company identified by gln {
   o CompanyType type
 }
 
-participant Farmer extends Company {
+participant Farmer extends Company {}
 
+participant Slaughterhouse extends Company {}
+
+participant CuttingPlant extends Company {}
+
+participant Manufacturer extends Company {}
+
+participant Wholesale extends Company {}
+
+participant Retailer extends Company {}
+
+participant Consumer identified by consumerId {
+  o String consumerId
+  o String name optional
 }
 
-participant Slaughterhouse extends Company {
+/*****************************************************************************/
+/* Asset definitions                                                         */
+/*****************************************************************************/
 
+asset Material identified by materialId {
+  o String materialId
+  o MaterialType type
+  o MaterialQuality quality
+  o MaterialStatus status default = 'CREATED'
+  o Boolean bonus optional
+  --> Batch batch optional
+  --> Company owner optional
+  --> Company[] ownerHistory optional
+  o TransportLog[] transportLog optional
+  o SensorData[] sensorData optional
 }
 
-participant CuttingPlant extends Company {
-
+asset Batch identified by batchId {
+  o String batchId
+  o DateTime timestamp
+  o String description optional
+  o Integer availableMaterialCount default = 0
+  --> Material[] materials
+  o BatchStatus status
 }
 
-participant Manufacturer extends Company {
-
+asset BatchNetwork identified by batchNetworkId {
+  o String batchNetworkId
+  o String description
+  --> Batch[] nodes optional
+  o Edge[] edges optional
 }
 
-participant Wholesale extends Company {
-
-}
-
-participant Retailer extends Company {
-
-}
+/*****************************************************************************/
+/* Concept & Enumeration definitions                                         */
+/*****************************************************************************/
 
 concept Address {
   o String street
   o String number
   o String postCode
   o String country
+}
+
+concept TransportLog {
+  o DateTime timestamp
+  o Location location
+}
+
+concept Location {
+  o String latitude
+  o String longitude
+  o String altitude
+  o String description optional
+}
+
+concept SensorData {
+  o DateTime timestamp
+  o String key
+  o String value
+}
+
+concept Edge {
+  o String edgeId
+  --> Batch source
+  --> Batch target
+  o String weight optional
 }
 
 enum CompanyType {
@@ -64,23 +124,6 @@ enum CompanyType {
   o GROSSHANDEL
   o EINZELHANDEL
   o TRANSPORT
-}
-
-participant Consumer identified by consumerId {
-  o String consumerId
-  o String name optional
-}
-
-asset Material identified by materialId {
-  o String materialId
-  o MaterialType type
-  o MaterialQuality quality
-  o Boolean bonus optional
-  o MaterialStatus status default = 'REGISTRIERT'
-  --> Company owner optional
-  --> Company[] ownerHistory optional
-  o TransportLog[] transportLog optional
-  o SensorData[] sensorData optional
 }
 
 enum MaterialType {
@@ -102,65 +145,31 @@ enum MaterialQuality {
 }
 
 enum MaterialStatus {
-  o REGISTRIERT
+  o CREATED
+  o REGISTERED
+  o AVAILABLE_FOR_PRODUCTION
   o IN_TRANSIT
-  o VERARBEITET
-}
-
-concept TransportLog {
-  o DateTime timestamp
-  o Location location
-}
-
-concept Location {
-  o String latitude
-  o String longitude
-  o String altitude
-  o String description optional
-}
-
-concept SensorData {
-  o DateTime timestamp
-  o String key
-  o String value
-}
-
-asset Batch identified by batchId {
-  o String batchId
-  o DateTime timestamp
-  o String description optional
-  --> Material[] materials
-  o BatchStatus status
+  o PROCESSED
 }
 
 enum BatchStatus {
   o CREATED
   o REGISTERED
+  o AVAILABLE_FOR_PRODUCTION
+  o IN_TRANSIT
   o PROCESSED
 }
 
-asset BatchNetwork identified by batchNetworkId {
-  o String batchNetworkId
-  o String description
-  --> Batch[] nodes optional
-  o Edge[] edges optional
-}
-
-concept Edge {
-  o String edgeId
-  --> Batch source
-  --> Batch target
-  o String weight optional
-}
-
-transaction verarbeiteSchwein {
-  --> Material material
-}
+/*****************************************************************************/
+/* Transaction definitions                                                   */
+/*****************************************************************************/
 
 transaction produceMaterial {
   o Material newMaterial // new material object
   --> Material[] inputMaterial optional // processed material (set status to 'processed')
+  o Integer inputMaterialCount optional
   --> Batch[] inputBatch optional // processed batch (set status to 'processed')
+  o Integer inputBatchCount optional // how many materials from this batch are used for production
 }
 
 transaction transportMaterial {
@@ -207,3 +216,7 @@ transaction generateMockMasterData {}
 transaction generateMockTransactionData {}
 transaction removeMockMasterData {}
 transaction removeMockTransactionData {}
+
+/*****************************************************************************/
+/* Event definitions                                                         */
+/*****************************************************************************/

@@ -35,3 +35,10 @@ query selectMaterialsWithBonusCondition {
       SELECT io.dev.foodchain.Material
           WHERE (bonus == true)
 }
+
+query selectDailyBatch {
+  description: "Select batch based on actual date"
+  statement:
+    SELECT io.dev.foodchain.Batch
+      WHERE (timestamp == _$today)
+}
