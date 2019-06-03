@@ -21,7 +21,8 @@
     "pretest": "npm run lint",
     "lint": "eslint .",
     "test": "nyc mocha -t 0 test/*.js && cucumber-js",
-    "release": "standard-version -s"
+    "release": "standard-version -s",
+    "build": "npm run prepublish"
   },
   "devDependencies": {
     "chai": "latest",
