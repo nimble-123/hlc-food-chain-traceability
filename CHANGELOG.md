@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.2](https://github.com/nimble-123/hlc-food-chain-traceability/compare/v0.3.1...v0.3.2) (2019-11-25)
+
+
+### Bug Fixes
+
+* Remove non-deterministic behaviour ([76b2f27](https://github.com/nimble-123/hlc-food-chain-traceability/commit/76b2f27))
+
+
+### Build System
+
+* Add archive creation shortcut ([ed84ba5](https://github.com/nimble-123/hlc-food-chain-traceability/commit/ed84ba5))
+
+
+
 ### [0.3.1](https://github.com/nimble-123/hlc-food-chain-traceability/compare/v0.3.0...v0.3.1) (2019-06-03)
 
 
