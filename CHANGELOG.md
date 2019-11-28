@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.3](https://github.com/nimble-123/hlc-food-chain-traceability/compare/v0.3.2...v0.3.3) (2019-11-28)
+
+
+### Bug Fixes
+
+* Fix missing batch node in mock transaction ([ccb67a1](https://github.com/nimble-123/hlc-food-chain-traceability/commit/ccb67a1))
+
+
+
 ### [0.3.2](https://github.com/nimble-123/hlc-food-chain-traceability/compare/v0.3.1...v0.3.2) (2019-11-25)
 
 
